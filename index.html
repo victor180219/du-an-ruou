@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Báo Giá Rượu Whisky</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;600&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            background: linear-gradient(135deg, #1a0e0a 0%, #2c1810 40%, #3d2317 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .page-wrapper {
+            display: flex;
+            gap: 24px;
+            max-width: 1100px;
+            width: 100%;
+            align-items: flex-start;
+        }
+
+        .container {
+            background: linear-gradient(145deg, rgba(60, 35, 20, 0.95), rgba(40, 22, 12, 0.98));
+            border: 1px solid rgba(205, 165, 100, 0.3);
+            border-radius: 16px;
+            padding: 48px 40px;
+            max-width: 520px;
+            width: 100%;
+            flex-shrink: 0;
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(205, 165, 100, 0.15);
+        }
+
+        .history-panel {
+            background: linear-gradient(145deg, rgba(60, 35, 20, 0.95), rgba(40, 22, 12, 0.98));
+            border: 1px solid rgba(205, 165, 100, 0.3);
+            border-radius: 16px;
+            padding: 36px 28px;
+            flex: 1;
+            min-width: 420px;
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(205, 165, 100, 0.15);
+        }
+
+        .history-panel h2 {
+            font-family: 'Playfair Display', serif;
+            text-align: center;
+            color: #cda564;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: 1px;
+        }
+
+        .history-subtitle {
+            text-align: center;
+            color: rgba(205, 165, 100, 0.6);
+            font-size: 12px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border: 1px solid rgba(205, 165, 100, 0.2);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .history-table thead th {
+            background: rgba(205, 165, 100, 0.12);
+            color: #cda564;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 14px 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(205, 165, 100, 0.25);
+        }
+
+        .history-table thead th:not(:last-child) {
+            border-right: 1px solid rgba(205, 165, 100, 0.1);
+        }
+
+        .history-table tbody td {
+            padding: 12px 12px;
+            color: #f0e6d6;
+            font-size: 14px;
+            border-bottom: 1px solid rgba(205, 165, 100, 0.08);
+        }
+
+        .history-table tbody td:not(:last-child) {
+            border-right: 1px solid rgba(205, 165, 100, 0.06);
+        }
+
+        .history-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .history-table tbody tr {
+            transition: background 0.2s;
+        }
+
+        .history-table tbody tr:hover {
+            background: rgba(205, 165, 100, 0.06);
+        }
+
+        .history-table tbody tr.new-row {
+            animation: fadeIn 0.4s ease;
+        }
+
+        .history-table .col-total {
+            color: #cda564;
+            font-weight: 700;
+        }
+
+        .history-table .col-discount {
+            color: rgba(205, 165, 100, 0.85);
+            font-size: 13px;
+        }
+
+        .history-empty {
+            text-align: center;
+            color: rgba(240, 230, 214, 0.35);
+            padding: 40px 16px;
+            font-style: italic;
+            font-size: 14px;
+        }
+
+        @media (max-width: 960px) {
+            .page-wrapper {
+                flex-direction: column;
+                align-items: center;
+            }
+            .history-panel {
+                min-width: unset;
+                max-width: 520px;
+                width: 100%;
+            }
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 8px;
+            font-size: 36px;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            text-align: center;
+            color: #cda564;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: rgba(205, 165, 100, 0.6);
+            font-size: 13px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 36px;
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(205, 165, 100, 0.4), transparent);
+            margin: 28px 0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #cda564;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(205, 165, 100, 0.25);
+            border-radius: 8px;
+            color: #f0e6d6;
+            font-size: 16px;
+            font-family: 'Lato', sans-serif;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #cda564;
+            box-shadow: 0 0 12px rgba(205, 165, 100, 0.15);
+        }
+
+        input::placeholder {
+            color: rgba(240, 230, 214, 0.3);
+        }
+
+        input[readonly] {
+            opacity: 0.55;
+            cursor: not-allowed;
+            border-style: dashed;
+        }
+
+        .discount-info {
+            background: rgba(205, 165, 100, 0.08);
+            border: 1px solid rgba(205, 165, 100, 0.15);
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin-bottom: 24px;
+        }
+
+        .discount-info p {
+            color: rgba(240, 230, 214, 0.7);
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .discount-info span {
+            color: #cda564;
+            font-weight: 600;
+        }
+
+        button {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #cda564, #a67c3d);
+            border: none;
+            border-radius: 8px;
+            color: #1a0e0a;
+            font-family: 'Lato', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(205, 165, 100, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .result {
+            display: none;
+            margin-top: 28px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-header {
+            font-family: 'Playfair Display', serif;
+            color: #cda564;
+            font-size: 18px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(205, 165, 100, 0.1);
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            color: rgba(240, 230, 214, 0.7);
+            font-size: 14px;
+        }
+
+        .result-value {
+            color: #f0e6d6;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .result-item.total {
+            margin-top: 8px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(205, 165, 100, 0.3);
+            border-bottom: none;
+        }
+
+        .result-item.total .result-label {
+            color: #cda564;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .result-item.total .result-value {
+            color: #cda564;
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .discount-badge {
+            display: inline-block;
+            background: rgba(205, 165, 100, 0.15);
+            color: #cda564;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .product-name {
+            text-align: center;
+            color: #f0e6d6;
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            margin-bottom: 16px;
+            font-style: italic;
+        }
+
+        /* Autocomplete */
+        .autocomplete-wrapper {
+            position: relative;
+        }
+
+        .autocomplete-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            margin-top: 4px;
+            background: linear-gradient(145deg, rgba(50, 30, 16, 0.98), rgba(35, 18, 8, 0.99));
+            border: 1px solid rgba(205, 165, 100, 0.35);
+            border-radius: 8px;
+            max-height: 220px;
+            overflow-y: auto;
+            box-shadow:
+                0 12px 36px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(205, 165, 100, 0.1);
+            backdrop-filter: blur(8px);
+        }
+
+        .autocomplete-list:empty {
+            display: none;
+        }
+
+        .autocomplete-item {
+            padding: 12px 16px;
+            color: #f0e6d6;
+            font-size: 15px;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            border-bottom: 1px solid rgba(205, 165, 100, 0.08);
+        }
+
+        .autocomplete-item:last-child {
+            border-bottom: none;
+        }
+
+        .autocomplete-item:hover,
+        .autocomplete-item.active {
+            background: linear-gradient(90deg, rgba(205, 165, 100, 0.18), rgba(205, 165, 100, 0.06));
+            color: #cda564;
+        }
+
+        .autocomplete-item .match {
+            color: #cda564;
+            font-weight: 700;
+        }
+
+        .autocomplete-list::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .autocomplete-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .autocomplete-list::-webkit-scrollbar-thumb {
+            background: rgba(205, 165, 100, 0.3);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+    <div class="container">
+        <div class="logo">🥃</div>
+        <h1>Báo Giá Rượu Whisky</h1>
+        <p class="subtitle">Premium Spirits</p>
+
+        <div class="form-group">
+            <label>Tên rượu</label>
+            <div class="autocomplete-wrapper">
+                <input type="text" id="tenRuou" placeholder="VD: Johnnie Walker Blue Label" autocomplete="off">
+                <div class="autocomplete-list" id="acList"></div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Giá gốc (VNĐ / chai)</label>
+            <input type="text" id="giaGoc" placeholder="Chọn rượu để hiện giá" readonly>
+        </div>
+
+        <div class="form-group">
+            <label>Số lượng chai</label>
+            <input type="number" id="soLuong" placeholder="VD: 12" min="1">
+        </div>
+
+        <div class="discount-info">
+            <p>🏷 Mua từ <span>10 chai</span>: giảm <span>5%</span></p>
+            <p>🏷 Mua từ <span>50 chai</span>: giảm <span>10%</span></p>
+        </div>
+
+        <button onclick="tinhGia()">Tính báo giá</button>
+
+        <div class="result" id="ketQua">
+            <div class="divider"></div>
+            <p class="result-header">Bảng Báo Giá</p>
+            <p class="product-name" id="tenSP"></p>
+
+            <div class="result-item">
+                <span class="result-label">Đơn giá</span>
+                <span class="result-value" id="donGia"></span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Số lượng</span>
+                <span class="result-value" id="sl"></span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Tổng tiền trước giảm</span>
+                <span class="result-value" id="tongTruoc"></span>
+            </div>
+            <div class="result-item">
+                <span class="result-label" id="labelChietKhau">Chiết khấu</span>
+                <span class="result-value" id="chietKhau"></span>
+            </div>
+            <div class="result-item total">
+                <span class="result-label">Thanh toán</span>
+                <span class="result-value" id="tongCuoi"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="history-panel">
+        <h2>📋 Lịch Sử Báo Giá</h2>
+        <p class="history-subtitle">Quotation History</p>
+        <table class="history-table">
+            <thead>
+                <tr>
+                    <th>Tên rượu</th>
+                    <th>Số lượng</th>
+                    <th>Chiết khấu</th>
+                    <th>Tổng tiền</th>
+                </tr>
+            </thead>
+            <tbody id="historyBody">
+            </tbody>
+        </table>
+        <p class="history-empty" id="historyEmpty">Chưa có báo giá nào. Hãy tính báo giá để bắt đầu.</p>
+    </div>
+    </div>
+
+    <script>
+        // ===== KHO DỮ LIỆU SẢN PHẨM =====
+        var khoRuou = [
+            { ten: 'Chivas 12',                gia: 510000 },
+            { ten: 'Chivas 18',                gia: 1350000 },
+            { ten: 'Chivas 21',                gia: 2500000 },
+            { ten: 'Macallan 12 Double Cask',   gia: 2100000 },
+            { ten: 'Macallan 15',              gia: 4500000 },
+            { ten: 'Johnnie Walker Blue Label', gia: 3800000 }
+        ];
+
+        var giaHienTai = 0;
+
+        function timGia(tenRuou) {
+            for (var i = 0; i < khoRuou.length; i++) {
+                if (khoRuou[i].ten === tenRuou) return khoRuou[i].gia;
+            }
+            return 0;
+        }
+
+        function chonSanPham(tenRuou) {
+            var input = document.getElementById('tenRuou');
+            var giaInput = document.getElementById('giaGoc');
+            input.value = tenRuou;
+            giaHienTai = timGia(tenRuou);
+            giaInput.value = giaHienTai > 0 ? formatVND(giaHienTai) : '';
+        }
+
+        (function() {
+            var input = document.getElementById('tenRuou');
+            var list = document.getElementById('acList');
+            var activeIdx = -1;
+
+            function highlightMatch(text, query) {
+                var idx = text.toLowerCase().indexOf(query.toLowerCase());
+                if (idx === -1) return text;
+                return text.substring(0, idx) +
+                    '<span class="match">' + text.substring(idx, idx + query.length) + '</span>' +
+                    text.substring(idx + query.length);
+            }
+
+            function showSuggestions(query) {
+                list.innerHTML = '';
+                activeIdx = -1;
+                if (!query) {
+                    giaHienTai = 0;
+                    document.getElementById('giaGoc').value = '';
+                    return;
+                }
+
+                var matches = khoRuou.filter(function(item) {
+                    return item.ten.toLowerCase().indexOf(query.toLowerCase()) !== -1;
+                });
+
+                matches.forEach(function(item) {
+                    var div = document.createElement('div');
+                    div.className = 'autocomplete-item';
+                    div.setAttribute('data-name', item.ten);
+                    div.innerHTML = highlightMatch(item.ten, query) +
+                        ' <span style="float:right;color:#cda564;font-size:13px;">' + formatVND(item.gia) + '</span>';
+                    div.addEventListener('mousedown', function(e) {
+                        e.preventDefault();
+                        chonSanPham(item.ten);
+                        list.innerHTML = '';
+                        document.getElementById('soLuong').focus();
+                    });
+                    list.appendChild(div);
+                });
+            }
+
+            input.addEventListener('input', function() {
+                showSuggestions(this.value.trim());
+                // Nếu gõ tay khớp đúng tên sản phẩm thì tự điền giá
+                var exact = timGia(this.value.trim());
+                if (exact > 0) {
+                    giaHienTai = exact;
+                    document.getElementById('giaGoc').value = formatVND(exact);
+                } else {
+                    giaHienTai = 0;
+                    document.getElementById('giaGoc').value = '';
+                }
+            });
+
+            input.addEventListener('keydown', function(e) {
+                var items = list.querySelectorAll('.autocomplete-item');
+                if (!items.length) return;
+
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    activeIdx = (activeIdx + 1) % items.length;
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    activeIdx = (activeIdx - 1 + items.length) % items.length;
+                } else if (e.key === 'Enter' && activeIdx >= 0) {
+                    e.preventDefault();
+                    var selectedName = items[activeIdx].getAttribute('data-name');
+                    chonSanPham(selectedName);
+                    list.innerHTML = '';
+                    document.getElementById('soLuong').focus();
+                    return;
+                } else if (e.key === 'Escape') {
+                    list.innerHTML = '';
+                    return;
+                } else {
+                    return;
+                }
+
+                items.forEach(function(el, i) {
+                    el.classList.toggle('active', i === activeIdx);
+                });
+                items[activeIdx].scrollIntoView({ block: 'nearest' });
+            });
+
+            input.addEventListener('blur', function() {
+                list.innerHTML = '';
+            });
+        })();
+
+        // Enter tại ô Số lượng → tự động tính báo giá
+        document.getElementById('soLuong').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                tinhGia();
+            }
+        });
+
+        function formatVND(n) {
+            return n.toLocaleString('vi-VN') + ' ₫';
+        }
+
+        function tinhGia() {
+            var ten = document.getElementById('tenRuou').value.trim();
+            var gia = giaHienTai;
+            var sl = parseInt(document.getElementById('soLuong').value);
+
+            if (!ten) { alert('Vui lòng nhập tên rượu.'); return; }
+            if (!gia || gia <= 0) { alert('Vui lòng chọn một loại rượu từ danh sách gợi ý.'); return; }
+            if (isNaN(sl) || sl <= 0) { alert('Vui lòng nhập số lượng hợp lệ.'); return; }
+
+            var tongTruoc = gia * sl;
+            var phanTram = 0;
+
+            if (sl >= 50) {
+                phanTram = 10;
+            } else if (sl >= 10) {
+                phanTram = 5;
+            }
+
+            var tienGiam = tongTruoc * phanTram / 100;
+            var tongCuoi = tongTruoc - tienGiam;
+
+            document.getElementById('tenSP').textContent = '— ' + ten + ' —';
+            document.getElementById('donGia').textContent = formatVND(gia);
+            document.getElementById('sl').textContent = sl + ' chai';
+            document.getElementById('tongTruoc').textContent = formatVND(tongTruoc);
+
+            var labelCK = 'Chiết khấu';
+            if (phanTram > 0) {
+                labelCK += ' ';
+                document.getElementById('labelChietKhau').innerHTML = labelCK + '<span class="discount-badge">-' + phanTram + '%</span>';
+                document.getElementById('chietKhau').textContent = '- ' + formatVND(tienGiam);
+            } else {
+                document.getElementById('labelChietKhau').textContent = 'Chiết khấu';
+                document.getElementById('chietKhau').textContent = 'Không áp dụng';
+            }
+
+            document.getElementById('tongCuoi').textContent = formatVND(tongCuoi);
+
+            var ketQua = document.getElementById('ketQua');
+            ketQua.style.display = 'block';
+            ketQua.style.animation = 'none';
+            ketQua.offsetHeight;
+            ketQua.style.animation = 'fadeIn 0.4s ease';
+
+            // Thêm vào lịch sử
+            document.getElementById('historyEmpty').style.display = 'none';
+            var tbody = document.getElementById('historyBody');
+            var tr = document.createElement('tr');
+            tr.className = 'new-row';
+            var discountText = phanTram > 0 ? ('-' + phanTram + '% (' + formatVND(tienGiam) + ')') : 'Không';
+            tr.innerHTML =
+                '<td>' + ten + '</td>' +
+                '<td>' + sl + ' chai</td>' +
+                '<td class="col-discount">' + discountText + '</td>' +
+                '<td class="col-total">' + formatVND(tongCuoi) + '</td>';
+            tbody.insertBefore(tr, tbody.firstChild);
+        }
+    </script>
+</body>
+</html>
