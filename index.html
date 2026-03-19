@@ -141,6 +141,253 @@
             font-size: 14px;
         }
 
+        /* Nút +/- số lượng */
+        .qty-controls {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .qty-controls span {
+            min-width: 32px;
+            text-align: center;
+        }
+
+        .cart-btn {
+            width: 28px;
+            height: 28px;
+            padding: 0;
+            border: 1px solid rgba(205, 165, 100, 0.35);
+            border-radius: 6px;
+            background: rgba(205, 165, 100, 0.1);
+            color: #cda564;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s, border-color 0.2s;
+            letter-spacing: 0;
+            text-transform: none;
+            font-family: 'Lato', sans-serif;
+        }
+
+        .cart-btn:hover {
+            background: rgba(205, 165, 100, 0.25);
+            border-color: #cda564;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .cart-btn:active {
+            transform: scale(0.92);
+        }
+
+        .cart-btn-delete {
+            width: auto;
+            height: 28px;
+            padding: 0 8px;
+            border: 1px solid rgba(180, 80, 60, 0.35);
+            border-radius: 6px;
+            background: rgba(180, 80, 60, 0.1);
+            color: #d4836a;
+            font-size: 13px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: background 0.2s, border-color 0.2s;
+            letter-spacing: 0;
+            text-transform: none;
+            font-family: 'Lato', sans-serif;
+            font-weight: 600;
+        }
+
+        .cart-btn-delete:hover {
+            background: rgba(180, 80, 60, 0.25);
+            border-color: #d4836a;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Hàng tổng đơn hàng */
+        .history-table tfoot td {
+            padding: 16px 12px;
+            border-top: 2px solid rgba(205, 165, 100, 0.35);
+            background: rgba(205, 165, 100, 0.08);
+        }
+
+        .cart-grand-label {
+            color: #cda564;
+            font-family: 'Playfair Display', serif;
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .cart-grand-total {
+            color: #cda564;
+            font-size: 18px;
+            font-weight: 700;
+            text-align: right;
+        }
+
+        /* Nút xác nhận đặt hàng */
+        .btn-checkout {
+            width: 100%;
+            padding: 16px;
+            margin-top: 20px;
+            background: linear-gradient(135deg, #cda564, #a67c3d);
+            border: none;
+            border-radius: 8px;
+            color: #1a0e0a;
+            font-family: 'Lato', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-checkout:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(205, 165, 100, 0.3);
+        }
+
+        .btn-checkout:active {
+            transform: translateY(0);
+        }
+
+        /* Modal overlay */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: linear-gradient(145deg, rgba(60, 35, 20, 0.98), rgba(40, 22, 12, 1));
+            border: 1px solid rgba(205, 165, 100, 0.4);
+            border-radius: 16px;
+            padding: 40px 36px;
+            max-width: 460px;
+            width: 90%;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(205, 165, 100, 0.15);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-box h2 {
+            font-family: 'Playfair Display', serif;
+            text-align: center;
+            color: #cda564;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: 1px;
+        }
+
+        .modal-subtitle {
+            text-align: center;
+            color: rgba(205, 165, 100, 0.6);
+            font-size: 12px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 28px;
+        }
+
+        .modal-box .form-group {
+            margin-bottom: 18px;
+        }
+
+        .modal-box label {
+            display: block;
+            color: #cda564;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .modal-box input {
+            width: 100%;
+            padding: 12px 14px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(205, 165, 100, 0.25);
+            border-radius: 8px;
+            color: #f0e6d6;
+            font-size: 15px;
+            font-family: 'Lato', sans-serif;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .modal-box input:focus {
+            outline: none;
+            border-color: #cda564;
+            box-shadow: 0 0 12px rgba(205, 165, 100, 0.15);
+        }
+
+        .modal-box input::placeholder {
+            color: rgba(240, 230, 214, 0.3);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .modal-actions button {
+            flex: 1;
+            padding: 14px;
+            border-radius: 8px;
+            font-family: 'Lato', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-cancel {
+            background: transparent;
+            border: 1px solid rgba(205, 165, 100, 0.3);
+            color: rgba(240, 230, 214, 0.7);
+        }
+
+        .btn-cancel:hover {
+            border-color: rgba(205, 165, 100, 0.6);
+            color: #f0e6d6;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-submit-order {
+            background: linear-gradient(135deg, #cda564, #a67c3d);
+            border: none;
+            color: #1a0e0a;
+        }
+
+        .btn-submit-order:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(205, 165, 100, 0.3);
+        }
+
         @media (max-width: 960px) {
             .page-wrapper {
                 flex-direction: column;
@@ -477,22 +724,59 @@
     </div>
 
     <div class="history-panel">
-        <h2>📋 Lịch Sử Báo Giá</h2>
-        <p class="history-subtitle">Quotation History</p>
-        <table class="history-table">
+        <h2>🛒 Giỏ Hàng Của Bạn</h2>
+        <p class="history-subtitle">Your Cart</p>
+        <table class="history-table" id="cartTable" style="display:none;">
             <thead>
                 <tr>
                     <th>Tên rượu</th>
                     <th>Số lượng</th>
                     <th>Chiết khấu</th>
                     <th>Tổng tiền</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody id="historyBody">
             </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3" class="cart-grand-label">TỔNG TIỀN ĐƠN HÀNG</td>
+                    <td class="cart-grand-total" id="grandTotal">0 ₫</td>
+                    <td></td>
+                </tr>
+            </tfoot>
         </table>
-        <p class="history-empty" id="historyEmpty">Chưa có báo giá nào. Hãy tính báo giá để bắt đầu.</p>
+        <p class="history-empty" id="historyEmpty">Giỏ hàng trống. Hãy tính báo giá để thêm sản phẩm.</p>
+        <button class="btn-checkout" id="btnCheckout" style="display:none;" onclick="moModal()">Xác nhận đặt hàng</button>
     </div>
+    </div>
+
+    <!-- Modal đặt hàng -->
+    <div class="modal-overlay" id="modalOverlay" onclick="dongModal(event)">
+        <div class="modal-box" onclick="event.stopPropagation()">
+            <h2>📦 Thông Tin Giao Hàng</h2>
+            <p class="modal-subtitle">Delivery Information</p>
+
+            <div class="form-group">
+                <label>Họ và tên</label>
+                <input type="text" id="hoTen" placeholder="VD: Nguyễn Văn A">
+            </div>
+
+            <div class="form-group">
+                <label>Số điện thoại liên hệ</label>
+                <input type="tel" id="soDienThoai" placeholder="VD: 0901 234 567">
+            </div>
+
+            <div class="form-group">
+                <label>Địa chỉ nhận hàng</label>
+                <input type="text" id="diaChi" placeholder="VD: 123 Nguyễn Huệ, Q.1, TP.HCM">
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="dongModal()">Hủy</button>
+                <button class="btn-submit-order" onclick="guiDonHang()">Gửi đơn hàng</button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -507,6 +791,8 @@
         ];
 
         var giaHienTai = 0;
+        var gioHang = []; // { id, ten, gia, soLuong }
+        var cartIdCounter = 0;
 
         function timGia(tenRuou) {
             for (var i = 0; i < khoRuou.length; i++) {
@@ -523,6 +809,86 @@
             giaInput.value = giaHienTai > 0 ? formatVND(giaHienTai) : '';
         }
 
+        function formatVND(n) {
+            return n.toLocaleString('vi-VN') + ' ₫';
+        }
+
+        function tinhChietKhau(sl) {
+            if (sl >= 50) return 10;
+            if (sl >= 10) return 5;
+            return 0;
+        }
+
+        // ===== GIỎ HÀNG =====
+        function capNhatGioHang() {
+            var tbody = document.getElementById('historyBody');
+            var table = document.getElementById('cartTable');
+            var empty = document.getElementById('historyEmpty');
+            var btnCheckout = document.getElementById('btnCheckout');
+
+            if (gioHang.length === 0) {
+                table.style.display = 'none';
+                empty.style.display = 'block';
+                btnCheckout.style.display = 'none';
+                return;
+            }
+
+            table.style.display = 'table';
+            empty.style.display = 'none';
+            btnCheckout.style.display = 'block';
+            tbody.innerHTML = '';
+
+            var tongDonHang = 0;
+
+            gioHang.forEach(function(item) {
+                var phanTram = tinhChietKhau(item.soLuong);
+                var tongTruoc = item.gia * item.soLuong;
+                var tienGiam = tongTruoc * phanTram / 100;
+                var tongCuoi = tongTruoc - tienGiam;
+                tongDonHang += tongCuoi;
+
+                var discountText = phanTram > 0
+                    ? ('-' + phanTram + '% (' + formatVND(tienGiam) + ')')
+                    : 'Không';
+
+                var tr = document.createElement('tr');
+                tr.innerHTML =
+                    '<td>' + item.ten + '</td>' +
+                    '<td>' +
+                        '<div class="qty-controls">' +
+                            '<button class="cart-btn" onclick="thayDoiSL(' + item.id + ', -1)">−</button>' +
+                            '<span>' + item.soLuong + '</span>' +
+                            '<button class="cart-btn" onclick="thayDoiSL(' + item.id + ', 1)">+</button>' +
+                        '</div>' +
+                    '</td>' +
+                    '<td class="col-discount">' + discountText + '</td>' +
+                    '<td class="col-total">' + formatVND(tongCuoi) + '</td>' +
+                    '<td><button class="cart-btn-delete" onclick="xoaKhoiGio(' + item.id + ')">🗑️</button></td>';
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('grandTotal').textContent = formatVND(tongDonHang);
+        }
+
+        function thayDoiSL(id, delta) {
+            for (var i = 0; i < gioHang.length; i++) {
+                if (gioHang[i].id === id) {
+                    gioHang[i].soLuong += delta;
+                    if (gioHang[i].soLuong < 1) {
+                        gioHang.splice(i, 1);
+                    }
+                    break;
+                }
+            }
+            capNhatGioHang();
+        }
+
+        function xoaKhoiGio(id) {
+            gioHang = gioHang.filter(function(item) { return item.id !== id; });
+            capNhatGioHang();
+        }
+
+        // ===== AUTOCOMPLETE =====
         (function() {
             var input = document.getElementById('tenRuou');
             var list = document.getElementById('acList');
@@ -567,7 +933,6 @@
 
             input.addEventListener('input', function() {
                 showSuggestions(this.value.trim());
-                // Nếu gõ tay khớp đúng tên sản phẩm thì tự điền giá
                 var exact = timGia(this.value.trim());
                 if (exact > 0) {
                     giaHienTai = exact;
@@ -621,10 +986,7 @@
             }
         });
 
-        function formatVND(n) {
-            return n.toLocaleString('vi-VN') + ' ₫';
-        }
-
+        // ===== TÍNH BÁO GIÁ =====
         function tinhGia() {
             var ten = document.getElementById('tenRuou').value.trim();
             var gia = giaHienTai;
@@ -635,14 +997,7 @@
             if (isNaN(sl) || sl <= 0) { alert('Vui lòng nhập số lượng hợp lệ.'); return; }
 
             var tongTruoc = gia * sl;
-            var phanTram = 0;
-
-            if (sl >= 50) {
-                phanTram = 10;
-            } else if (sl >= 10) {
-                phanTram = 5;
-            }
-
+            var phanTram = tinhChietKhau(sl);
             var tienGiam = tongTruoc * phanTram / 100;
             var tongCuoi = tongTruoc - tienGiam;
 
@@ -669,19 +1024,48 @@
             ketQua.offsetHeight;
             ketQua.style.animation = 'fadeIn 0.4s ease';
 
-            // Thêm vào lịch sử
-            document.getElementById('historyEmpty').style.display = 'none';
-            var tbody = document.getElementById('historyBody');
-            var tr = document.createElement('tr');
-            tr.className = 'new-row';
-            var discountText = phanTram > 0 ? ('-' + phanTram + '% (' + formatVND(tienGiam) + ')') : 'Không';
-            tr.innerHTML =
-                '<td>' + ten + '</td>' +
-                '<td>' + sl + ' chai</td>' +
-                '<td class="col-discount">' + discountText + '</td>' +
-                '<td class="col-total">' + formatVND(tongCuoi) + '</td>';
-            tbody.insertBefore(tr, tbody.firstChild);
+            // Thêm vào giỏ hàng
+            gioHang.unshift({ id: ++cartIdCounter, ten: ten, gia: gia, soLuong: sl });
+            capNhatGioHang();
         }
+
+        // ===== MODAL ĐẶT HÀNG =====
+        function moModal() {
+            if (gioHang.length === 0) {
+                alert('Giỏ hàng đang trống!');
+                return;
+            }
+            document.getElementById('modalOverlay').classList.add('active');
+            document.getElementById('hoTen').focus();
+        }
+
+        function dongModal(e) {
+            if (e && e.target !== e.currentTarget) return;
+            document.getElementById('modalOverlay').classList.remove('active');
+        }
+
+        function guiDonHang() {
+            var hoTen = document.getElementById('hoTen').value.trim();
+            var sdt = document.getElementById('soDienThoai').value.trim();
+            var diaChi = document.getElementById('diaChi').value.trim();
+
+            if (!hoTen) { alert('Vui lòng nhập họ và tên.'); return; }
+            if (!sdt) { alert('Vui lòng nhập số điện thoại.'); return; }
+            if (!diaChi) { alert('Vui lòng nhập địa chỉ nhận hàng.'); return; }
+
+            alert('Đơn hàng đã được ghi nhận!\n\nKhách hàng: ' + hoTen + '\nSĐT: ' + sdt + '\nĐịa chỉ: ' + diaChi);
+
+            // Reset modal
+            document.getElementById('hoTen').value = '';
+            document.getElementById('soDienThoai').value = '';
+            document.getElementById('diaChi').value = '';
+            document.getElementById('modalOverlay').classList.remove('active');
+        }
+
+        // Đóng modal bằng phím Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') dongModal();
+        });
     </script>
 </body>
 </html>
