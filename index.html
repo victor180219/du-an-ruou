@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Báo Giá Rượu Whisky</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Be+Vietnam+Pro:wght@300;400;600;700&display=swap&subset=vietnamese');
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        button { font: inherit; }
 
         body {
-            font-family: 'Lato', sans-serif;
+            font-family: 'Be Vietnam Pro', sans-serif;
             background: linear-gradient(135deg, #1a0e0a 0%, #2c1810 40%, #3d2317 100%);
             min-height: 100vh;
             display: flex;
@@ -21,8 +22,8 @@
 
         .page-wrapper {
             display: flex;
-            gap: 24px;
-            max-width: 1100px;
+            gap: 28px;
+            max-width: 1300px;
             width: 100%;
             align-items: flex-start;
         }
@@ -32,8 +33,7 @@
             border: 1px solid rgba(205, 165, 100, 0.3);
             border-radius: 16px;
             padding: 48px 40px;
-            max-width: 520px;
-            width: 100%;
+            width: 440px;
             flex-shrink: 0;
             box-shadow:
                 0 20px 60px rgba(0, 0, 0, 0.5),
@@ -44,9 +44,9 @@
             background: linear-gradient(145deg, rgba(60, 35, 20, 0.95), rgba(40, 22, 12, 0.98));
             border: 1px solid rgba(205, 165, 100, 0.3);
             border-radius: 16px;
-            padding: 36px 28px;
+            padding: 36px 32px;
             flex: 1;
-            min-width: 420px;
+            min-width: 520px;
             box-shadow:
                 0 20px 60px rgba(0, 0, 0, 0.5),
                 inset 0 1px 0 rgba(205, 165, 100, 0.15);
@@ -78,7 +78,20 @@
             border: 1px solid rgba(205, 165, 100, 0.2);
             border-radius: 8px;
             overflow: hidden;
+            table-layout: fixed;
         }
+
+        /* Tỷ lệ cột: Tên 30% | SL 18% | CK 26% | Tổng 20% | Xóa 6% */
+        .history-table th:nth-child(1),
+        .history-table td:nth-child(1) { width: 30%; }
+        .history-table th:nth-child(2),
+        .history-table td:nth-child(2) { width: 18%; }
+        .history-table th:nth-child(3),
+        .history-table td:nth-child(3) { width: 26%; }
+        .history-table th:nth-child(4),
+        .history-table td:nth-child(4) { width: 20%; }
+        .history-table th:nth-child(5),
+        .history-table td:nth-child(5) { width: 6%; }
 
         .history-table thead th {
             background: rgba(205, 165, 100, 0.12);
@@ -87,9 +100,10 @@
             font-weight: 700;
             letter-spacing: 1px;
             text-transform: uppercase;
-            padding: 14px 12px;
+            padding: 14px 16px;
             text-align: left;
             border-bottom: 1px solid rgba(205, 165, 100, 0.25);
+            white-space: nowrap;
         }
 
         .history-table thead th:not(:last-child) {
@@ -97,10 +111,11 @@
         }
 
         .history-table tbody td {
-            padding: 12px 12px;
+            padding: 14px 16px;
             color: #f0e6d6;
             font-size: 14px;
             border-bottom: 1px solid rgba(205, 165, 100, 0.08);
+            vertical-align: middle;
         }
 
         .history-table tbody td:not(:last-child) {
@@ -126,11 +141,13 @@
         .history-table .col-total {
             color: #cda564;
             font-weight: 700;
+            white-space: nowrap;
         }
 
         .history-table .col-discount {
             color: rgba(205, 165, 100, 0.85);
             font-size: 13px;
+            white-space: nowrap;
         }
 
         .history-empty {
@@ -145,12 +162,13 @@
         .qty-controls {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 10px;
         }
 
         .qty-controls span {
-            min-width: 32px;
+            min-width: 28px;
             text-align: center;
+            font-weight: 600;
         }
 
         .cart-btn {
@@ -170,7 +188,7 @@
             transition: background 0.2s, border-color 0.2s;
             letter-spacing: 0;
             text-transform: none;
-            font-family: 'Lato', sans-serif;
+            font-family: 'Be Vietnam Pro', sans-serif;
         }
 
         .cart-btn:hover {
@@ -200,7 +218,7 @@
             transition: background 0.2s, border-color 0.2s;
             letter-spacing: 0;
             text-transform: none;
-            font-family: 'Lato', sans-serif;
+            font-family: 'Be Vietnam Pro', sans-serif;
             font-weight: 600;
         }
 
@@ -231,34 +249,10 @@
             font-size: 18px;
             font-weight: 700;
             text-align: right;
+            white-space: nowrap;
         }
 
-        /* Nút xác nhận đặt hàng */
-        .btn-checkout {
-            width: 100%;
-            padding: 16px;
-            margin-top: 20px;
-            background: linear-gradient(135deg, #cda564, #a67c3d);
-            border: none;
-            border-radius: 8px;
-            color: #1a0e0a;
-            font-family: 'Lato', sans-serif;
-            font-size: 15px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
 
-        .btn-checkout:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(205, 165, 100, 0.3);
-        }
-
-        .btn-checkout:active {
-            transform: translateY(0);
-        }
 
         /* Modal overlay */
         .modal-overlay {
@@ -331,7 +325,7 @@
             border-radius: 8px;
             color: #f0e6d6;
             font-size: 15px;
-            font-family: 'Lato', sans-serif;
+            font-family: 'Be Vietnam Pro', sans-serif;
             transition: border-color 0.3s, box-shadow 0.3s;
         }
 
@@ -355,7 +349,7 @@
             flex: 1;
             padding: 14px;
             border-radius: 8px;
-            font-family: 'Lato', sans-serif;
+            font-family: 'Be Vietnam Pro', sans-serif;
             font-size: 14px;
             font-weight: 700;
             letter-spacing: 1px;
@@ -388,15 +382,22 @@
             box-shadow: 0 8px 24px rgba(205, 165, 100, 0.3);
         }
 
-        @media (max-width: 960px) {
+        @media (max-width: 1080px) {
             .page-wrapper {
                 flex-direction: column;
                 align-items: center;
             }
+            .container {
+                width: 100%;
+                max-width: 520px;
+            }
             .history-panel {
                 min-width: unset;
-                max-width: 520px;
+                max-width: 600px;
                 width: 100%;
+            }
+            .history-table {
+                table-layout: auto;
             }
         }
 
@@ -453,7 +454,7 @@
             border-radius: 8px;
             color: #f0e6d6;
             font-size: 16px;
-            font-family: 'Lato', sans-serif;
+            font-family: 'Be Vietnam Pro', sans-serif;
             transition: border-color 0.3s, box-shadow 0.3s;
         }
 
@@ -492,30 +493,36 @@
             font-weight: 600;
         }
 
-        button {
+        /* Class chung cho nút sang trọng */
+        .btn-premium {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
             width: 100%;
             padding: 16px;
-            background: linear-gradient(135deg, #cda564, #a67c3d);
-            border: none;
+            background: linear-gradient(135deg, #cda564, #a67c3d) !important;
+            border: none !important;
             border-radius: 8px;
-            color: #1a0e0a;
-            font-family: 'Lato', sans-serif;
-            font-size: 15px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            text-transform: uppercase;
+            color: #1a0e0a !important;
+            font-family: 'Be Vietnam Pro', sans-serif !important;
+            font-size: 15px !important;
+            font-weight: 700 !important;
+            letter-spacing: 2px !important;
+            text-transform: uppercase !important;
+            line-height: 1.2 !important;
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        button:hover {
+        .btn-premium:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 24px rgba(205, 165, 100, 0.3);
         }
 
-        button:active {
+        .btn-premium:active {
             transform: translateY(0);
         }
+
 
         .result {
             display: none;
@@ -693,7 +700,7 @@
             <p>🏷 Mua từ <span>50 chai</span>: giảm <span>10%</span></p>
         </div>
 
-        <button onclick="tinhGia()">Tính báo giá</button>
+        <button class="btn-premium" onclick="tinhGia()">Tính báo giá</button>
 
         <div class="result" id="ketQua">
             <div class="divider"></div>
@@ -747,7 +754,7 @@
             </tfoot>
         </table>
         <p class="history-empty" id="historyEmpty">Giỏ hàng trống. Hãy tính báo giá để thêm sản phẩm.</p>
-        <button class="btn-checkout" id="btnCheckout" style="display:none;" onclick="moModal()">Xác nhận đặt hàng</button>
+        <button class="btn-premium" id="btnCheckout" style="display:none; margin-top:20px;" onclick="moModal()">Xác nhận đặt hàng</button>
     </div>
     </div>
 
