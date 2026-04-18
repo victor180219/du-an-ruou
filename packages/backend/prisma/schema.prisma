@@ -1,0 +1,372 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Role {
+  id          Int     @id @default(autoincrement())
+  name        String  @unique
+  displayName String  @map("display_name")
+  permissions Json    @default("{}")
+  description String?
+
+  users User[]
+
+  @@map("roles")
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  username     String    @unique
+  passwordHash String    @map("password_hash")
+  fullName     String    @map("full_name")
+  title        String?
+  phone        String?
+  email        String?
+  roleId       Int       @map("role_id")
+  branch       String    @default("all")
+  isActive     Boolean   @default(true) @map("is_active")
+  lastLogin    DateTime? @map("last_login")
+  createdAt    DateTime  @default(now()) @map("created_at")
+
+  role              Role             @relation(fields: [roleId], references: [id])
+  assignedCustomers Customer[]       @relation("AssignedSale")
+  createdOrders     Order[]          @relation("OrderCreator")
+  approvedOrders    Order[]          @relation("OrderApprover")
+  deliveries        Delivery[]       @relation("Shipper")
+  createdPOs        PurchaseOrder[]  @relation("POCreator")
+  createdTransfers  StockTransfer[]  @relation("TransferCreator")
+  createdPayments   Payment[]        @relation("PaymentCreator")
+  receivedPayments  Payment[]        @relation("PaymentReceiver")
+  salesTargets      SalesTarget[]    @relation("TargetUser")
+  createdTargets    SalesTarget[]    @relation("TargetCreator")
+  assignedComplaints Complaint[]     @relation("ComplaintAssignee")
+  createdComplaints  Complaint[]     @relation("ComplaintCreator")
+  activityLogs      ActivityLog[]
+
+  @@map("users")
+}
+
+model Category {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  sortOrder   Int      @default(0) @map("sort_order")
+  isActive    Boolean  @default(true) @map("is_active")
+
+  products Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  id             Int      @id @default(autoincrement())
+  sku            String   @unique
+  name           String
+  categoryId     Int?     @map("category_id")
+  volumeMl       Int?     @map("volume_ml")
+  barcode        String?
+  costPrice      Decimal  @default(0) @map("cost_price") @db.Decimal(15, 2)
+  retailPrice    Decimal  @default(0) @map("retail_price") @db.Decimal(15, 2)
+  wholesalePrice Decimal  @default(0) @map("wholesale_price") @db.Decimal(15, 2)
+  unit           String   @default("chai")
+  imageUrl       String?  @map("image_url")
+  description    String?
+  isActive       Boolean  @default(true) @map("is_active")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  category           Category?           @relation(fields: [categoryId], references: [id])
+  inventory          Inventory[]
+  orderItems         OrderItem[]
+  purchaseOrderItems PurchaseOrderItem[]
+  stockTransferItems StockTransferItem[]
+
+  @@map("products")
+}
+
+model Customer {
+  id             Int      @id @default(autoincrement())
+  name           String
+  phone          String?
+  email          String?
+  address        String?
+  customerType   String   @default("retail") @map("customer_type")
+  customerGroup  String?  @map("customer_group")
+  assignedSaleId Int?     @map("assigned_sale_id")
+  debtLimit      Decimal  @default(0) @map("debt_limit") @db.Decimal(15, 2)
+  notes          String?
+  isActive       Boolean  @default(true) @map("is_active")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  assignedSale User?       @relation("AssignedSale", fields: [assignedSaleId], references: [id])
+  orders       Order[]
+  payments     Payment[]   @relation("CustomerPayment")
+  complaints   Complaint[]
+
+  @@map("customers")
+}
+
+model Supplier {
+  id          Int      @id @default(autoincrement())
+  name        String
+  contactName String?  @map("contact_name")
+  phone       String?
+  email       String?
+  address     String?
+  notes       String?
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  purchaseOrders PurchaseOrder[]
+  payments       Payment[]       @relation("SupplierPayment")
+
+  @@map("suppliers")
+}
+
+model Warehouse {
+  id          Int      @id @default(autoincrement())
+  name        String
+  type        String
+  branch      String
+  address     String?
+  managerName String?  @map("manager_name")
+  isActive    Boolean  @default(true) @map("is_active")
+
+  inventory      Inventory[]
+  orders         Order[]
+  purchaseOrders PurchaseOrder[]
+  transfersFrom  StockTransfer[] @relation("TransferFrom")
+  transfersTo    StockTransfer[] @relation("TransferTo")
+  salesTargets   SalesTarget[]
+
+  @@map("warehouses")
+}
+
+model Inventory {
+  id          Int      @id @default(autoincrement())
+  productId   Int      @map("product_id")
+  warehouseId Int      @map("warehouse_id")
+  quantity    Int      @default(0)
+  minQuantity Int      @default(0) @map("min_quantity")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  product   Product   @relation(fields: [productId], references: [id])
+  warehouse Warehouse @relation(fields: [warehouseId], references: [id])
+
+  @@unique([productId, warehouseId])
+  @@map("inventory")
+}
+
+model StockTransfer {
+  id              Int      @id @default(autoincrement())
+  transferCode    String   @unique @map("transfer_code")
+  fromWarehouseId Int      @map("from_warehouse_id")
+  toWarehouseId   Int      @map("to_warehouse_id")
+  status          String   @default("pending")
+  notes           String?
+  createdBy       Int      @map("created_by")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  fromWarehouse Warehouse           @relation("TransferFrom", fields: [fromWarehouseId], references: [id])
+  toWarehouse   Warehouse           @relation("TransferTo", fields: [toWarehouseId], references: [id])
+  creator       User                @relation("TransferCreator", fields: [createdBy], references: [id])
+  items         StockTransferItem[]
+
+  @@map("stock_transfers")
+}
+
+model StockTransferItem {
+  id         Int @id @default(autoincrement())
+  transferId Int @map("transfer_id")
+  productId  Int @map("product_id")
+  quantity   Int
+
+  transfer StockTransfer @relation(fields: [transferId], references: [id])
+  product  Product       @relation(fields: [productId], references: [id])
+
+  @@map("stock_transfer_items")
+}
+
+model Order {
+  id                 Int       @id @default(autoincrement())
+  orderCode          String    @unique @map("order_code")
+  customerId         Int?      @map("customer_id")
+  warehouseId        Int       @map("warehouse_id")
+  orderType          String    @default("retail") @map("order_type")
+  status             String    @default("pending")
+  totalAmount        Decimal   @default(0) @map("total_amount") @db.Decimal(15, 2)
+  discountAmount     Decimal   @default(0) @map("discount_amount") @db.Decimal(15, 2)
+  finalAmount        Decimal   @default(0) @map("final_amount") @db.Decimal(15, 2)
+  paidAmount         Decimal   @default(0) @map("paid_amount") @db.Decimal(15, 2)
+  debtAmount         Decimal   @default(0) @map("debt_amount") @db.Decimal(15, 2)
+  expectedDeliveryAt DateTime? @map("expected_delivery_at")
+  saleNote           String?   @map("sale_note")
+  cashierNote        String?   @map("cashier_note")
+  createdBy          Int       @map("created_by")
+  approvedBy         Int?      @map("approved_by")
+  approvedAt         DateTime? @map("approved_at")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+
+  customer   Customer?  @relation(fields: [customerId], references: [id])
+  warehouse  Warehouse  @relation(fields: [warehouseId], references: [id])
+  creator    User       @relation("OrderCreator", fields: [createdBy], references: [id])
+  approver   User?      @relation("OrderApprover", fields: [approvedBy], references: [id])
+  items      OrderItem[]
+  deliveries Delivery[]
+  complaints Complaint[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id        Int     @id @default(autoincrement())
+  orderId   Int     @map("order_id")
+  productId Int     @map("product_id")
+  quantity  Int
+  unitPrice Decimal @map("unit_price") @db.Decimal(15, 2)
+  costPrice Decimal @default(0) @map("cost_price") @db.Decimal(15, 2)
+  lineTotal Decimal @map("line_total") @db.Decimal(15, 2)
+
+  order   Order   @relation(fields: [orderId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+
+  @@map("order_items")
+}
+
+model Delivery {
+  id              Int       @id @default(autoincrement())
+  orderId         Int       @map("order_id")
+  shipperId       Int       @map("shipper_id")
+  status          String    @default("assigned")
+  expectedAt      DateTime? @map("expected_at")
+  deliveryAddress String?   @map("delivery_address")
+  deliveryFee     Decimal   @default(0) @map("delivery_fee") @db.Decimal(15, 2)
+  collectedAmount Decimal   @default(0) @map("collected_amount") @db.Decimal(15, 2)
+  isCollected     Boolean   @default(false) @map("is_collected")
+  deliveredAt     DateTime? @map("delivered_at")
+  notes           String?
+  createdAt       DateTime  @default(now()) @map("created_at")
+
+  order   Order @relation(fields: [orderId], references: [id])
+  shipper User  @relation("Shipper", fields: [shipperId], references: [id])
+
+  @@map("deliveries")
+}
+
+model PurchaseOrder {
+  id          Int      @id @default(autoincrement())
+  poCode      String   @unique @map("po_code")
+  supplierId  Int      @map("supplier_id")
+  warehouseId Int      @map("warehouse_id")
+  totalAmount Decimal  @default(0) @map("total_amount") @db.Decimal(15, 2)
+  paidAmount  Decimal  @default(0) @map("paid_amount") @db.Decimal(15, 2)
+  debtAmount  Decimal  @default(0) @map("debt_amount") @db.Decimal(15, 2)
+  status      String   @default("draft")
+  notes       String?
+  createdBy   Int      @map("created_by")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  supplier  Supplier            @relation(fields: [supplierId], references: [id])
+  warehouse Warehouse           @relation(fields: [warehouseId], references: [id])
+  creator   User                @relation("POCreator", fields: [createdBy], references: [id])
+  items     PurchaseOrderItem[]
+
+  @@map("purchase_orders")
+}
+
+model PurchaseOrderItem {
+  id              Int     @id @default(autoincrement())
+  purchaseOrderId Int     @map("purchase_order_id")
+  productId       Int     @map("product_id")
+  quantity        Int
+  unitCost        Decimal @map("unit_cost") @db.Decimal(15, 2)
+  lineTotal       Decimal @map("line_total") @db.Decimal(15, 2)
+
+  purchaseOrder PurchaseOrder @relation(fields: [purchaseOrderId], references: [id])
+  product       Product       @relation(fields: [productId], references: [id])
+
+  @@map("purchase_order_items")
+}
+
+model Payment {
+  id            Int      @id @default(autoincrement())
+  paymentCode   String   @unique @map("payment_code")
+  type          String
+  sourceType    String   @map("source_type")
+  sourceId      Int?     @map("source_id")
+  customerId    Int?     @map("customer_id")
+  supplierId    Int?     @map("supplier_id")
+  amount        Decimal  @db.Decimal(15, 2)
+  paymentMethod String   @map("payment_method")
+  notes         String?
+  createdBy     Int      @map("created_by")
+  receivedBy    Int?     @map("received_by")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  customer Customer? @relation("CustomerPayment", fields: [customerId], references: [id])
+  supplier Supplier? @relation("SupplierPayment", fields: [supplierId], references: [id])
+  creator  User      @relation("PaymentCreator", fields: [createdBy], references: [id])
+  receiver User?     @relation("PaymentReceiver", fields: [receivedBy], references: [id])
+
+  @@map("payments")
+}
+
+model SalesTarget {
+  id           Int      @id @default(autoincrement())
+  userId       Int      @map("user_id")
+  warehouseId  Int?     @map("warehouse_id")
+  targetType   String   @map("target_type")
+  targetAmount Decimal  @map("target_amount") @db.Decimal(15, 2)
+  periodDate   DateTime @map("period_date")
+  notes        String?
+  createdBy    Int      @map("created_by")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  user      User       @relation("TargetUser", fields: [userId], references: [id])
+  warehouse Warehouse? @relation(fields: [warehouseId], references: [id])
+  creator   User       @relation("TargetCreator", fields: [createdBy], references: [id])
+
+  @@map("sales_targets")
+}
+
+model Complaint {
+  id          Int       @id @default(autoincrement())
+  orderId     Int?      @map("order_id")
+  customerId  Int?      @map("customer_id")
+  type        String
+  description String
+  status      String    @default("open")
+  resolution  String?
+  assignedTo  Int?      @map("assigned_to")
+  createdBy   Int       @map("created_by")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  resolvedAt  DateTime? @map("resolved_at")
+
+  order    Order?    @relation(fields: [orderId], references: [id])
+  customer Customer? @relation(fields: [customerId], references: [id])
+  assignee User?     @relation("ComplaintAssignee", fields: [assignedTo], references: [id])
+  creator  User      @relation("ComplaintCreator", fields: [createdBy], references: [id])
+
+  @@map("complaints")
+}
+
+model ActivityLog {
+  id         Int      @id @default(autoincrement())
+  userId     Int      @map("user_id")
+  action     String
+  entityType String   @map("entity_type")
+  entityId   Int?     @map("entity_id")
+  details    Json?
+  ipAddress  String?  @map("ip_address")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("activity_logs")
+}

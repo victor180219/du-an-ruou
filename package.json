@@ -1,0 +1,16 @@
+{
+  "name": "pos-ruou",
+  "private": true,
+  "workspaces": ["packages/*"],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "npm run dev --workspace=packages/backend",
+    "dev:frontend": "npm run dev --workspace=packages/frontend",
+    "db:migrate": "npm run db:migrate --workspace=packages/backend",
+    "db:seed": "npm run db:seed --workspace=packages/backend",
+    "db:reset": "npm run db:reset --workspace=packages/backend"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
